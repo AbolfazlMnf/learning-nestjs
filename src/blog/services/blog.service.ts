@@ -14,6 +14,8 @@ export class BlogService {
   ) {}
 
   async findAll(queryParams: generalQueryDto) {
+    console.log('Servive');
+
     const { page = 1, title, limit = 5, sort } = queryParams;
 
     const sortObject = functionSort(sort);

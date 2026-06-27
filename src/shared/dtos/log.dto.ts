@@ -9,6 +9,11 @@ export class LogDto {
   content!: string;
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  url!: string;
+
+  @ApiProperty()
   @IsEnum(LogType)
   type!: LogType;
 }

@@ -5,14 +5,20 @@ import { BlogModule } from './blog/blog.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { LogFilter } from './shared/filters/log.filter';
 import { Log, LogSchema } from './shared/schemas/log.schema';
+import { ConfigModule } from '@nestjs/config';
+import { LogInterceptor } from './shared/interceptors/log.interceptor';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env`,
+    }),
     BlogModule,
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest-app'),
+    MongooseModule.forRoot(process.env.DB_URL ?? ''),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
       serveRoot: '/files',
@@ -30,6 +36,10 @@ import { Log, LogSchema } from './shared/schemas/log.schema';
     {
       provide: APP_FILTER,
       useClass: LogFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LogInterceptor,
     },
   ],
 })

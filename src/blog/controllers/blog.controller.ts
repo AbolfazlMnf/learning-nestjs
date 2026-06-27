@@ -8,19 +8,25 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { generalQueryDto } from 'src/shared/dtos/query-dto';
 import { BlogService } from '../services/blog.service';
 import { BlogDtos } from '../dtos/blog.dtos';
 
 @ApiTags('Blogs')
-@Controller('blog')
+// @ApiHeader({
+//   name: 'apikey',
+//   description: 'API KEY',
+// })
+@Controller('blogs')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
   findAll(@Query() queryParams: generalQueryDto) {
+    console.log('Controller');
+
     return this.blogService.findAll(queryParams);
   }
   @Post()
