@@ -17,6 +17,7 @@ import { uploadFileDto } from './blog/dtos/uploadFile.dto';
 import { ApiConsumes } from '@nestjs/swagger';
 import { deleteImage, saveImage, saveImages } from './shared/utils/image';
 import { DeleteFileDto, UploadFilesDto } from './shared/dtos/upload-files.dto';
+import { ImagesPipe } from './shared/pipes/images.pipe';
 
 @Controller()
 export class AppController {
@@ -53,7 +54,7 @@ export class AppController {
   @UseInterceptors(FilesInterceptor(`files`))
   @ApiConsumes(`multipart/form-data`)
   uploadFiles(
-    @UploadedFiles() files: Array<Express.Multer.File>,
+    @UploadedFiles(ImagesPipe) files: Array<Express.Multer.File>,
     @Body() body: UploadFilesDto,
   ) {
     return saveImages(files, body);

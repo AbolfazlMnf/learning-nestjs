@@ -15,7 +15,7 @@ export class LogInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
     // console.log(request);
-    console.log('Before');
+    // console.log('Before');
 
     return next.handle().pipe(
       tap((response) => {
