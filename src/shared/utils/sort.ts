@@ -13,6 +13,8 @@ export const functionSort = (
       return { createdAt: -1 };
     case Sort.UpdatedAt:
       return { updatedAt: -1 };
+    case Sort.LastName:
+      return { lastName: 1 };
     default:
       return {};
   }

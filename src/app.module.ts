@@ -11,6 +11,7 @@ import { Log, LogSchema } from './shared/schemas/log.schema';
 import { ConfigModule } from '@nestjs/config';
 import { LogInterceptor } from './shared/interceptors/log.interceptor';
 import { TimeMiddleware } from './shared/middlewares/time.middleware';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TimeMiddleware } from './shared/middlewares/time.middleware';
         schema: LogSchema,
       },
     ]),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
