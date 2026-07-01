@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -19,6 +20,7 @@ import { FarsiPipe } from 'src/shared/pipes/farsi.pipe';
 import { MobilePipe } from 'src/shared/pipes/mobile.pipe';
 import { PasswordPipe } from 'src/shared/pipes/password.pipe';
 import { PasswordInterceptor } from 'src/shared/interceptors/password.interceptor';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -31,21 +33,24 @@ export class UserController {
   }
   @Post()
   @UseInterceptors(PasswordInterceptor)
-  createBlog(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
+  createUser(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
     return this.userService.create(body);
   }
 
   @Get(`:id`)
-  getOneBlog(@Param(`id`) id: string) {
+  getOneUser(@Param(`id`) id: string) {
     return this.userService.findOne(id);
   }
-  @Put(`:id`)
-  updateBlog(@Param(`id`) id: string, @Body() body: UserDto) {
+  @Patch(`:id`)
+  updateUser(
+    @Param(`id`) id: string,
+    @Body(FarsiPipe, MobilePipe, PasswordPipe) body: UpdateUserDto,
+  ) {
     return this.userService.update(id, body);
   }
 
   @Delete(`:id`)
-  deleteBlog(@Param(`id`) id: string) {
+  deleteUSer(@Param(`id`) id: string) {
     return this.userService.delete(id);
   }
 }

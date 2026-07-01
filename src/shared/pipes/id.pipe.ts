@@ -12,9 +12,10 @@ export class IdPipe implements PipeTransform {
     if (metadata.type === `param` && metadata.data === `id`) {
       if (!isValidObjectId(value)) {
         throw new BadRequestException();
+      } else {
+        return value;
       }
-    } else {
-      return value;
     }
+    return value;
   }
 }
