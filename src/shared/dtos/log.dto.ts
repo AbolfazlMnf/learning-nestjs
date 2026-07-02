@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { LogType } from '../schemas/log.schema';
 
 export class LogDto {
@@ -16,4 +16,9 @@ export class LogDto {
   @ApiProperty()
   @IsEnum(LogType)
   type!: LogType;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  user?: string;
 }

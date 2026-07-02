@@ -42,8 +42,10 @@ export class BlogService {
       throw new NotFoundException();
     }
   }
-  async create(body: BlogDtos) {
-    const newBlog = new this.blogModel(body);
+  async create(body: BlogDtos, user: string) {
+    console.log(user);
+
+    const newBlog = new this.blogModel({ ...body, author: user });
     await newBlog.save();
     return newBlog;
   }

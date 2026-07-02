@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { User } from 'src/user/schemas/user.shema';
 
 export enum LogType {
   Error = `error`,
@@ -19,6 +20,13 @@ export class Log extends Document {
 
   @Prop()
   type!: LogType;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: User.name,
+    required: false,
+  })
+  user?: User;
 }
 
 export const LogSchema = SchemaFactory.createForClass(Log);

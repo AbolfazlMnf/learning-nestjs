@@ -7,12 +7,16 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { generalQueryDto } from 'src/shared/dtos/query-dto';
 import { BlogService } from '../services/blog.service';
 import { BlogDtos } from '../dtos/blog.dtos';
+import { User } from 'src/shared/decorators/user.decorator';
+import { JwtGuard } from 'src/shared/guards/jwt.guard';
 
 @ApiTags('Blogs')
 // @ApiHeader({
@@ -20,6 +24,7 @@ import { BlogDtos } from '../dtos/blog.dtos';
 //   description: 'API KEY',
 // })
 @Controller('blogs')
+@UseGuards(JwtGuard)
 @ApiBearerAuth()
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
@@ -32,9 +37,9 @@ export class BlogController {
     return this.blogService.findAll(queryParams);
   }
   @Post()
-  createBlog(@Body() body: BlogDtos) {
-    console.log(body);
-    return this.blogService.create(body);
+  createBlog(@Body() body: BlogDtos, @User() user: string) {
+    console.log(user);
+    return this.blogService.create(body, user);
   }
 
   @Get(`:id`)
