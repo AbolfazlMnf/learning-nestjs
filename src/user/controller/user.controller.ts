@@ -9,9 +9,10 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { UserQueryDto } from '../dto/user-query.dto';
 import { UserDto } from '../dto/user.dto';
@@ -21,9 +22,12 @@ import { MobilePipe } from 'src/shared/pipes/mobile.pipe';
 import { PasswordPipe } from 'src/shared/pipes/password.pipe';
 import { PasswordInterceptor } from 'src/shared/interceptors/password.interceptor';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { JwtGuard } from 'src/shared/guards/jwt.guard';
 
 @ApiTags('Users')
 @Controller('users')
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -33,7 +37,9 @@ export class UserController {
   }
   @Post()
   @UseInterceptors(PasswordInterceptor)
-  createUser(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
+  createUser(
+    @Body(FarsiPipe, MobilePipe, new PasswordPipe(true)) body: UserDto,
+  ) {
     return this.userService.create(body);
   }
 
@@ -44,7 +50,7 @@ export class UserController {
   @Patch(`:id`)
   updateUser(
     @Param(`id`) id: string,
-    @Body(FarsiPipe, MobilePipe, PasswordPipe) body: UpdateUserDto,
+    @Body(FarsiPipe, MobilePipe, new PasswordPipe(true)) body: UpdateUserDto,
   ) {
     return this.userService.update(id, body);
   }

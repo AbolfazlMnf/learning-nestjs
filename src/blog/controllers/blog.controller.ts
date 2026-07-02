@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { generalQueryDto } from 'src/shared/dtos/query-dto';
 import { BlogService } from '../services/blog.service';
@@ -20,6 +20,7 @@ import { BlogDtos } from '../dtos/blog.dtos';
 //   description: 'API KEY',
 // })
 @Controller('blogs')
+@ApiBearerAuth()
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 

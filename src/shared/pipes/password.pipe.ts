@@ -7,6 +7,7 @@ import {
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class PasswordPipe implements PipeTransform {
+  constructor(private readonly isNew: boolean) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     if (value?.password) {
       const pass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{8,}$/;
@@ -16,9 +17,13 @@ export class PasswordPipe implements PipeTransform {
           `پسورد باید حداقل شامل 8 کاراکتر و اعداد و حروف باشد`,
         );
       } else {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(value.password, salt);
-        return { ...value, password: hashedPassword };
+        if (this.isNew) {
+          const salt = await bcrypt.genSalt();
+          const hashedPassword = await bcrypt.hash(value.password, salt);
+          return { ...value, password: hashedPassword };
+        } else {
+          return value;
+        }
       }
     }
     return value;

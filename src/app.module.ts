@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import { LogInterceptor } from './shared/interceptors/log.interceptor';
 import { TimeMiddleware } from './shared/middlewares/time.middleware';
 import { UserModule } from './user/user.module';
+import { DuplicateFilter } from './shared/filters/duplicate.filter';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,6 +22,10 @@ import { UserModule } from './user/user.module';
       envFilePath: `.env`,
     }),
     BlogModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      global: true,
+    }),
     MongooseModule.forRoot(process.env.DB_URL ?? ''),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
@@ -43,6 +49,10 @@ import { UserModule } from './user/user.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: LogInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: DuplicateFilter,
     },
   ],
 })

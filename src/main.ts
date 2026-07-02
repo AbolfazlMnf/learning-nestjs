@@ -18,7 +18,10 @@ async function bootstrap() {
   app.useGlobalPipes(new IdPipe());
   // app.useGlobalGuards(new ApiKeyGuard());
 
-  const config = new DocumentBuilder().setTitle(`nest app`).build();
+  const config = new DocumentBuilder()
+    .setTitle(`nest app`)
+    .addBearerAuth()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`/documentation`, app, document);
 
