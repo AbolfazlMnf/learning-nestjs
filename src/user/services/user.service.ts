@@ -13,6 +13,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { AuthDto } from '../dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ConfirmDto } from '../dto/confirm.dto';
 
 @Injectable()
 export class UserService {
@@ -85,9 +86,33 @@ export class UserService {
     if (!isPasswordCorrect) {
       throw new BadRequestException(`رمز عبور صحیح نمیباشد`);
     } else {
+      await this.sendCode(body.mobile);
+    }
+  }
+  async confirm(body: ConfirmDto) {
+    const user = await this.userModel.findOne({ mobile: body.mobile });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const isCodeCorrect = bcrypt.compareSync(body.code, user.code);
+    if (!isCodeCorrect) {
+      throw new BadRequestException(`کد صحیح نیست`);
+    } else {
       const payload = { id: user._id };
       const token = this.jwtService.sign(payload);
       return { token };
     }
+  }
+  async sendCode(mobile: string) {
+    const user = await this.findOneByMobile(mobile);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const code = Math.floor(Math.random() * 90000) + 10000;
+    const hashedCode = await bcrypt.hash(code.toString(), 10);
+    user.code = hashedCode;
+    await user.save();
+    console.log(code);
+    return `کد ارسالی را وارد نمایید`;
   }
 }
