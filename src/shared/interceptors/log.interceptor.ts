@@ -15,7 +15,7 @@ export class LogInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context
       .switchToHttp()
-      .getRequest<Request & { user?: string }>();
+      .getRequest<Request & { user?: any }>();
     // console.log(request);
     // console.log('Before');
 
@@ -28,7 +28,7 @@ export class LogInterceptor implements NestInterceptor {
             type: LogType[request.method as keyof typeof LogType],
             content: JSON.stringify(response),
             url: request.url,
-            user: request.user ?? undefined,
+            user: request?.user?._id ?? undefined,
           });
         }
       }),

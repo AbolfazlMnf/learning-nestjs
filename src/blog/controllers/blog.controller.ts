@@ -17,6 +17,8 @@ import { BlogService } from '../services/blog.service';
 import { BlogDtos } from '../dtos/blog.dtos';
 import { User } from 'src/shared/decorators/user.decorator';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
+import { RoleGuard } from 'src/shared/guards/role.guard';
+import { Role } from 'src/user/schemas/user.shema';
 
 @ApiTags('Blogs')
 // @ApiHeader({
@@ -24,7 +26,7 @@ import { JwtGuard } from 'src/shared/guards/jwt.guard';
 //   description: 'API KEY',
 // })
 @Controller('blogs')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, new RoleGuard([Role.Admin, Role.CopyRighter]))
 @ApiBearerAuth()
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}

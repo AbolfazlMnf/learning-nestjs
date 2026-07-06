@@ -23,10 +23,12 @@ import { PasswordPipe } from 'src/shared/pipes/password.pipe';
 import { PasswordInterceptor } from 'src/shared/interceptors/password.interceptor';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
+import { RoleGuard } from 'src/shared/guards/role.guard';
+import { Role } from '../schemas/user.shema';
 
 @ApiTags('Users')
 @Controller('users')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, new RoleGuard([Role.Admin]))
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
